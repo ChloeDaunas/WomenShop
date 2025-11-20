@@ -1,93 +1,86 @@
 package com.example.womenshop;
 
 public abstract class Product implements Discount, Comparable<Product> {
-    private static int number=0;
-    private String name;
-    private double purchase_price;
-    private double sell_price;
-    private double discount_price;
-    private int nbItems;
-    private static double capital = 10000.0;
-    private static double income=0;
-    private static double cost=0;
 
+    private static int number = 0;
 
+    private final int id;    //final so we can not change it once initialized
+    private final String name;
+    private double purchasePrice;
+    private double sellPrice;
+    private double discountPrice;
+    private int stock;
 
+    private final StoreFinance storeFinance;
 
-    public Product(String name, double purchase_price, double sell_price) {
+    public Product(String name, double purchasePrice, double sellPrice, StoreFinance storeFinance) {
+
+        validatePrice(purchasePrice);
+        validatePrice(sellPrice);
+
         this.name = name;
-        this.discount_price = 0;
-        this.nbItems = 0;
-        this.number++;
+        this.purchasePrice = purchasePrice;
+        this.sellPrice = sellPrice;
+        this.discountPrice = 0;
+        this.stock = 0;
 
-        try{
-            if(purchase_price >=0) {
-                this.purchase_price = purchase_price;
-            }
-            else{
-                throw new IllegalArgumentException("Negative price!");
-            }
+        this.storeFinance = storeFinance;
 
-            if(sell_price >=0) {
-                this.sell_price = sell_price;
-            }
-            else{
-                throw new IllegalArgumentException("Negative price!");
-            }
-        }
-        catch(IllegalArgumentException e){
-            System.out.printf(e.getMessage());
-        }
-
+        number++;
+        this.id = number;
     }
 
-    public void sell(int nb){
-        try{
-            if(this.nbItems < nb ){
-                throw new IllegalArgumentException("Product Unavailable");
-            }
-            else{
-                this.nbItems-=nb;
-                income+=nb*this.sell_price;
 
-                System.out.println(nb + " item(s) of " + name + " sold successfully.");
-            }
-        }
-        catch(IllegalArgumentException e){
-            //on affiche le message
-            //l'exeption n'affiche rien elle attrape juste le pb
-            System.out.println(e.getMessage());
+    private void validatePrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Negative price!");
         }
     }
 
-    public void purchase(int nb){
-        try{
-            if(capital<nb*purchase_price ){
-                throw new IllegalArgumentException("Product Unavailable");
-            }
-            else{
-                nbItems+=nb;
-                capital-=nb*purchase_price;
-            }
+
+    public void purchase(int quantity) {
+        double total = quantity * purchasePrice;
+
+        if (!storeFinance.canBuy(total)) {
+            throw new IllegalArgumentException("Not enough capital to buy products.");
         }
-        catch(IllegalArgumentException e){
-            System.out.println(e.getMessage());
+
+        stock += quantity;
+        storeFinance.registerPurchase(total);
+    }
+
+
+    public void sell(int quantity) {
+        if (quantity > stock) {
+            throw new IllegalArgumentException("Not enough stock.");
         }
+
+        stock -= quantity;
+        double gain = quantity * getEffectiveSellPrice();
+
+        storeFinance.registerSale(gain);
     }
 
 
     @Override
-    public void unApplyDiscount(){
-        discount_price=0;
+    public void unApplyDiscount() {
+        discountPrice = 0;
     }
+
+    public double getEffectiveSellPrice() {
+        return discountPrice > 0 ? discountPrice : sellPrice;
+    }
+
 
     @Override
-    public int compareTo(Product other){
-        return Double.compare(this.sell_price, other.sell_price);
+    public int compareTo(Product o) {
+        return Double.compare(this.sellPrice, o.sellPrice);
     }
 
-    public int getNumber() {
-        return number;
+
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -95,76 +88,52 @@ public abstract class Product implements Discount, Comparable<Product> {
     }
 
     public double getPurchasePrice() {
-        return purchase_price;
+        return purchasePrice;
     }
 
     public double getSellPrice() {
-        return sell_price;
+        return sellPrice;
     }
 
     public double getDiscountPrice() {
-        return discount_price;
+        return discountPrice;
     }
 
-    public int getNbItems() {
-        return nbItems;
+    public int getStock() {
+        return stock;
     }
 
-    public static double getCapital() {
-        return capital;
+    public StoreFinance getStoreFinance() {
+        return storeFinance;
     }
 
-    public static double getIncome() {
-        return income;
-    }
-    public static double getCost() {
-        return cost;
+
+    public void setPurchasePrice(double purchasePrice) {
+        validatePrice(purchasePrice);
+        this.purchasePrice = purchasePrice;
     }
 
-    //Setters
+    public void setSellPrice(double sellPrice) {
+        validatePrice(sellPrice);
+        this.sellPrice = sellPrice;
+    }
+
     public void setDiscountPrice(double discountPrice) {
-        this.discount_price = discountPrice;
+        validatePrice(discountPrice);
+        this.discountPrice = discountPrice;
     }
 
-    public void setNbItems(int nbItems) {
-        this.nbItems = nbItems;
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
-    public static void setCapital(double newCapital) {
-        capital = newCapital;
+    @Override
+    public String toString() {
+        return "Product #" + id +
+                " | " + name +
+                " | purchase: " + purchasePrice +
+                " | sell: " + sellPrice +
+                " | discount: " + discountPrice +
+                " | stock: " + stock;
     }
-
-    public static void setIncome(double newIncome) {
-        income = newIncome;
-    }
-
-    public void setPurchasePrice(double newPurchasePrice) {
-        purchase_price = newPurchasePrice;
-    }
-
-    public void setSellPrice(double newSellPrice) {
-        sell_price = newSellPrice;
-    }
-
-    public void setNumber(int newNumber) {
-        number = newNumber;
-    }
-
-    public void setName(String newName) {
-        name = newName;
-    }
-
-    public void setDiscount(double newDiscount) {
-        discount_price = newDiscount;
-
-    }
-
-    public static void setCost(double newCost) {
-        cost = newCost;
-    }
-
-    public String toString(){return number + " " + name + " purchase price:" + purchase_price + " sell price:" + sell_price + " discount price:" + discount_price + " nb items:" + nbItems;}
-
-
 }
-
