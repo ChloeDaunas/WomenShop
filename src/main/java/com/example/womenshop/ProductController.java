@@ -134,7 +134,9 @@ public class ProductController implements Initializable{
 
         PurchaseBtn.setOnAction(event -> purchaseProduct());
 
-        ApplyBtn.setOnAction(event -> applydiscont());
+        ApplyBtn.setOnAction(event -> ChangePrices(1));
+
+        StopBtn.setOnAction(event -> ChangePrices(2));
     }
 
     private DBManager dbManager = new DBManager();
@@ -345,11 +347,85 @@ public class ProductController implements Initializable{
 
     }
 
-    public void applydiscont() {
+    public void ChangePrices(int choix) {
+        ClothesLV.getItems().clear();
+        ShoesLV.getItems().clear();
+        AccessoriesLV.getItems().clear();
 
-        refreshAllTabs();
+        List<Accessories> allaccessories=dbManager.loadAccessories();
+        for(Accessories accessories:allaccessories){
+            if(choix==1){
+                accessories.applyDiscount();
+            }
+            else{
+                accessories.unApplyDiscount();
+            }
+
+        }
+
+        AccessoriesLV.getItems().addAll(allaccessories);
+
+        AccessoriesLV.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Accessories item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null)
+                    setText(null);
+                else
+                    setText(item.getName() + " — stock: " + item.getStock());
+            }
+        });
+
+        List<Shoes> allShoes=dbManager.loadShoes();
+        for(Shoes shoes:allShoes){
+            if(choix==1){
+                shoes.applyDiscount();
+            }
+            else{
+                shoes.unApplyDiscount();
+            }
+        }
+
+        ShoesLV.getItems().addAll(allShoes);
+
+        ShoesLV.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Shoes item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null)
+                    setText(null);
+                else
+                    setText(item.getName() + " — stock: " + item.getStock());
+            }
+        });
+
+        List<Clothes> allClothes=dbManager.loadClothes();
+
+        for(Clothes clothes:allClothes){
+            if(choix==1){
+                clothes.applyDiscount();
+            }
+            else{
+                clothes.unApplyDiscount();
+            }
+        }
+
+        ClothesLV.getItems().addAll(allClothes);
+
+        ClothesLV.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Clothes item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null)
+                    setText(null);
+                else
+                    setText(item.getName() + " — stock: " + item.getStock());
+            }
+        });
         clearFields();
     }
+
+
 
     public Product Select(String type, String Message){
         Product selectedProduct;

@@ -6,29 +6,35 @@ public class Clothes extends Product{
     public Clothes(int id, String name, double purchase_price, double sell_price, int size, StoreFinance storeFinance){
         super(id, name, purchase_price, sell_price,storeFinance);
         setSize(size);
-        setDiscountPrice(purchase_price*CLOTHES_DISCOUNT);
+        setDiscountPrice(sell_price*CLOTHES_DISCOUNT);
     }
 
     public Clothes(int id, String name, double purchase_price, double sell_price, int size, StoreFinance storeFinance, int stock){
         super(id,name, purchase_price, sell_price,storeFinance);
         setSize(size);
         setStock(stock);
-        setDiscountPrice(purchase_price*CLOTHES_DISCOUNT);
+        setDiscountPrice(sell_price*CLOTHES_DISCOUNT);
     }
 
     public Clothes(String name, double purchase_price, double sell_price, int size, StoreFinance storeFinance){
         super(name, purchase_price, sell_price,storeFinance);
         setSize(size);
-        setDiscountPrice(purchase_price*CLOTHES_DISCOUNT);
+        setDiscountPrice(sell_price*CLOTHES_DISCOUNT);
     }
 
     @Override
     public void applyDiscount(){
-        setSellPrice(getSellPrice()*CLOTHES_DISCOUNT);
+        double discounted = getSellPrice() * CLOTHES_DISCOUNT;
+        discounted = Math.round(discounted * 100.0) / 100.0; // 2 decimals
+        setSellPrice(discounted);;
     }
 
     @Override
-    public void unApplyDiscount(){setSellPrice(getDiscountPrice()/CLOTHES_DISCOUNT);}
+    public void unApplyDiscount(){
+        double discounted = getDiscountPrice()/CLOTHES_DISCOUNT;
+        discounted = Math.round(discounted * 100.0) / 100.0; // 2 decimals
+        setSellPrice(discounted);;
+    }
 
     public int getSize() {
         return size;

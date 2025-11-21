@@ -6,20 +6,20 @@ public class Shoes extends Product{
     public Shoes(int id, String name, double purchase_price, double sell_price, int shoeSize, StoreFinance storeFinance) {
         super(id, name, purchase_price, sell_price, storeFinance);
         setShoeSize(shoeSize);
-        setDiscountPrice(purchase_price*SHOES_DISCOUNT);
+        setDiscountPrice(sell_price*SHOES_DISCOUNT);
     }
 
     public Shoes(int id, String name, double purchase_price, double sell_price, int shoeSize, StoreFinance storeFinance, int stock) {
         super(id,name, purchase_price, sell_price, storeFinance);
         setShoeSize(shoeSize);
         setStock(stock);
-        setDiscountPrice(purchase_price*SHOES_DISCOUNT);
+        setDiscountPrice(sell_price*SHOES_DISCOUNT);
     }
 
     public Shoes(String name, double purchase_price, double sell_price, int shoeSize, StoreFinance storeFinance) {
         super(name, purchase_price, sell_price, storeFinance);
         setShoeSize(shoeSize);
-        setDiscountPrice(purchase_price*SHOES_DISCOUNT);
+        setDiscountPrice(sell_price*SHOES_DISCOUNT);
     }
 
     private void validateSize(int size) {
@@ -30,11 +30,16 @@ public class Shoes extends Product{
 
     @Override
     public void applyDiscount(){
-        setSellPrice(getSellPrice()*SHOES_DISCOUNT);
+        double discounted = getSellPrice() * SHOES_DISCOUNT;
+        discounted = Math.round(discounted * 100.0) / 100.0; // 2 decimals
+        setSellPrice(discounted);;;
     }
 
     @Override
-    public void unApplyDiscount(){setSellPrice(getDiscountPrice()/SHOES_DISCOUNT);
+    public void unApplyDiscount(){
+        double discounted = getDiscountPrice()/SHOES_DISCOUNT;
+        discounted = Math.round(discounted * 100.0) / 100.0; // 2 decimals
+        setSellPrice(discounted);;
     }
 
     public int getShoeSize() {

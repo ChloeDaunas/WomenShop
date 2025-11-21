@@ -1,6 +1,7 @@
 package com.example.womenshop;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListCell;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -275,10 +276,6 @@ public class DBManager {
         }
     }
 
-    public void applydiscount(){
-
-
-    }
 
 
 }
