@@ -25,6 +25,16 @@ public class Clothes extends Product{
     }
 
     @Override
+    public double getPurchasePrice() {
+        return super.getPurchasePrice();
+    }
+
+    @Override
+    public double getSellPrice() {
+        return super.getSellPrice();
+    }
+
+    @Override
     public String toString() {
         return super.toString() + " Clothes{" + "size=" + size + '}';
     }

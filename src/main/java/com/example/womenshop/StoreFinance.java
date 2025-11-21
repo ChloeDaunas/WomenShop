@@ -14,4 +14,26 @@ public class StoreFinance {
         capital = capital+totalCost;
         income = income + totalCost;
     }
+
+    public double getCapital() { return capital; }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public double getIncome() {
+        return income;
+    }
+
+    public void setIncome(double income) {
+        this.income = income;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public void setCapital(double capital) {
+        this.capital = capital;
+    }
 }
