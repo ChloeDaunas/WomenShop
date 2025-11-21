@@ -275,5 +275,10 @@ public class DBManager {
         }
     }
 
+    public void applydiscount(){
+
+
+    }
+
 
 }

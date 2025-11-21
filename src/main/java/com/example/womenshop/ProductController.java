@@ -133,6 +133,8 @@ public class ProductController implements Initializable{
         SellBtn.setOnAction(event -> sellProduct());
 
         PurchaseBtn.setOnAction(event -> purchaseProduct());
+
+        ApplyBtn.setOnAction(event -> applydiscont());
     }
 
     private DBManager dbManager = new DBManager();
@@ -343,6 +345,12 @@ public class ProductController implements Initializable{
 
     }
 
+    public void applydiscont() {
+
+        refreshAllTabs();
+        clearFields();
+    }
+
     public Product Select(String type, String Message){
         Product selectedProduct;
 
@@ -387,6 +395,7 @@ public class ProductController implements Initializable{
         SellTF.clear();
         PurchaseTF.clear();
     }
+
 
 
 }

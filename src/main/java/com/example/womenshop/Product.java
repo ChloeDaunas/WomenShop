@@ -106,10 +106,11 @@ public abstract class Product implements Discount, Comparable<Product> {
     }
 
 
+
+    public void unApplyDiscount() {}
+
     @Override
-    public void unApplyDiscount() {
-        discountPrice = 0;
-    }
+    public void applyDiscount() {}
 
     public double getEffectiveSellPrice() {
         return discountPrice > 0 ? discountPrice : sellPrice;
