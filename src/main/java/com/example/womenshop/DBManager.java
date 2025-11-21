@@ -230,6 +230,31 @@ public class DBManager {
         }
     }
 
+    public void deleteProduct(int id, String type) {
+        String sql = "";
 
+        try (Connection conn = connector()) {
+
+            if ("Clothes".equals(type)) {
+                sql = "DELETE FROM clothes WHERE id = ?";
+            } else if ("Shoes".equals(type)) {
+                sql = "DELETE FROM shoes WHERE id = ?";
+            } else if ("Accessories".equals(type)) {
+                sql = "DELETE FROM accessories WHERE id = ?";
+            } else {
+                System.out.println("Unknown type: " + type);
+                return;
+            }
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

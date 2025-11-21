@@ -121,6 +121,8 @@ public class ProductController implements Initializable{
         ClearBtn.setOnAction(event -> clearFields());
 
         ModifyBtn.setOnAction(event -> modifyProduct());
+
+        DeleteBtn.setOnAction(event -> deleteProduct());
     }
 
     private DBManager dbManager = new DBManager();
@@ -210,9 +212,6 @@ public class ProductController implements Initializable{
         CostsTF.setText(String.valueOf(storeFinance.getCost()));
     }
 
-
-
-
     public void addProduct() {
 
         String type = TypeCB.getValue();
@@ -284,6 +283,35 @@ public class ProductController implements Initializable{
         }
 
         dbManager.modifierProduct(selectedProduct.getId(),name, purchaseprice, sellprice, size, type);
+
+        refreshAllTabs();
+        clearFields();
+    }
+
+    public void deleteProduct() {
+        Product selectedProduct;
+
+        String type = TypeCB.getValue();
+
+        if (type == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No product selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Select a product to delete");
+            alert.showAndWait();
+        }
+
+        if(type.equals("Clothes")){
+            selectedProduct =ClothesLV.getSelectionModel().getSelectedItem();
+        }
+        else if(type.equals("Shoes")){
+            selectedProduct =ShoesLV.getSelectionModel().getSelectedItem();
+        }
+        else {
+            selectedProduct =AccessoriesLV.getSelectionModel().getSelectedItem();
+        }
+
+        dbManager.deleteProduct(selectedProduct.getId(), type);
 
         refreshAllTabs();
         clearFields();

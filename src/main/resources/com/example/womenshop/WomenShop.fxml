@@ -30,9 +30,9 @@
             </Tab>
         </tabs>
       </TabPane>
-      <Button fx:id="AddBtn" layoutX="42.0" layoutY="360.0" mnemonicParsing="false" text="Add" />
-      <Button fx:id="ModifyBtn" layoutX="115.0" layoutY="360.0" mnemonicParsing="false" text="Modify" />
-      <Button fx:id="DeleteBtn" layoutX="191.0" layoutY="360.0" mnemonicParsing="false" text="Delete" />
+      <Button fx:id="AddBtn" layoutX="379.0" layoutY="261.0" mnemonicParsing="false" text="Add" />
+      <Button fx:id="ModifyBtn" layoutX="442.0" layoutY="261.0" mnemonicParsing="false" text="Modify" />
+      <Button fx:id="DeleteBtn" layoutX="523.0" layoutY="261.0" mnemonicParsing="false" text="Delete" />
       <Button fx:id="SortBtn" layoutX="153.0" layoutY="111.0" mnemonicParsing="false" text="Sort by prices" />
       <TextField fx:id="capitalTF" layoutX="68.0" layoutY="14.0" />
       <TextField fx:id="IncomesTF" layoutX="68.0" layoutY="39.0" />
@@ -50,11 +50,11 @@
       <ComboBox fx:id="TypeCB" layoutX="424.0" layoutY="111.0" prefWidth="150.0" />
       <Label layoutX="344.0" layoutY="115.0" text="Type" />
       <Label layoutX="346.0" layoutY="224.0" text="Size" />
-      <Button fx:id="SellBtn" layoutX="424.0" layoutY="273.0" mnemonicParsing="false" text="Sell" />
-      <Button fx:id="PurchaseBtn" layoutX="499.0" layoutY="273.0" mnemonicParsing="false" text="Pourchase" />
+      <Button fx:id="SellBtn" layoutX="59.0" layoutY="345.0" mnemonicParsing="false" text="Sell" />
+      <Button fx:id="PurchaseBtn" layoutX="153.0" layoutY="345.0" mnemonicParsing="false" text="Pourchase" />
       <Button fx:id="ApplyBtn" layoutX="473.0" layoutY="14.0" mnemonicParsing="false" text="Apply " />
       <Button fx:id="StopBtn" layoutX="534.0" layoutY="14.0" mnemonicParsing="false" text="Stop" />
       <Label layoutX="410.0" layoutY="18.0" text="Discount" />
-      <Button fx:id="ClearBtn" layoutX="424.0" layoutY="310.0" mnemonicParsing="false" text="Clear" />
+      <Button fx:id="ClearBtn" layoutX="532.0" layoutY="297.0" mnemonicParsing="false" text="Clear" />
    </children>
 </AnchorPane>
