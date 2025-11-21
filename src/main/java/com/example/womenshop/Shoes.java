@@ -3,6 +3,17 @@ package com.example.womenshop;
 public class Shoes extends Product{
     private int shoeSize;
 
+    public Shoes(int id, String name, double purchase_price, double sell_price, int shoeSize, StoreFinance storeFinance) {
+        super(id, name, purchase_price, sell_price, storeFinance);
+        setShoeSize(shoeSize);
+    }
+
+    public Shoes(int id, String name, double purchase_price, double sell_price, int shoeSize, StoreFinance storeFinance, int stock) {
+        super(id,name, purchase_price, sell_price, storeFinance);
+        setShoeSize(shoeSize);
+        setStock(stock);
+    }
+
     public Shoes(String name, double purchase_price, double sell_price, int shoeSize, StoreFinance storeFinance) {
         super(name, purchase_price, sell_price, storeFinance);
         setShoeSize(shoeSize);

@@ -1,5 +1,7 @@
 package com.example.womenshop;
 
+import javafx.scene.control.Alert;
+
 public abstract class Product implements Discount, Comparable<Product> {
 
     private static int number = 0;
@@ -13,7 +15,7 @@ public abstract class Product implements Discount, Comparable<Product> {
 
     private final StoreFinance storeFinance;
 
-    public Product(String name, double purchasePrice, double sellPrice, StoreFinance storeFinance) {
+    public Product(int id, String name, double purchasePrice, double sellPrice, StoreFinance storeFinance) {
 
         validatePrice(purchasePrice);
         validatePrice(sellPrice);
@@ -26,8 +28,42 @@ public abstract class Product implements Discount, Comparable<Product> {
 
         this.storeFinance = storeFinance;
 
-        number++;
+        this.id = id;
+        number=id;
+    }
+
+    public Product(int id, String name, double purchasePrice, double sellPrice, StoreFinance storeFinance, int stock) {
+
+        validatePrice(purchasePrice);
+        validatePrice(sellPrice);
+
+        this.name = name;
+        this.purchasePrice = purchasePrice;
+        this.sellPrice = sellPrice;
+        this.discountPrice = 0;
+        this.stock = stock;
+
+        this.storeFinance = storeFinance;
+
+        this.id = id;
+        number=id;
+    }
+
+    public Product(String name, double purchasePrice, double sellPrice, StoreFinance storeFinance) {
+
+        validatePrice(purchasePrice);
+        validatePrice(sellPrice);
+
+        this.name = name;
+        this.purchasePrice = purchasePrice;
+        this.sellPrice = sellPrice;
+        this.discountPrice = 0;
+        this.stock = 0;
+
+        this.storeFinance = storeFinance;
+        number=number+1;
         this.id = number;
+
     }
 
 
@@ -42,7 +78,11 @@ public abstract class Product implements Discount, Comparable<Product> {
         double total = quantity * purchasePrice;
 
         if (!storeFinance.canBuy(total)) {
-            throw new IllegalArgumentException("Not enough capital to buy products.");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText(null);
+            alert.setContentText("Not enough capital to buy products.");
+            alert.showAndWait();
         }
 
         stock += quantity;
@@ -52,7 +92,11 @@ public abstract class Product implements Discount, Comparable<Product> {
 
     public void sell(int quantity) {
         if (quantity > stock) {
-            throw new IllegalArgumentException("Not enough stock.");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText(null);
+            alert.setContentText("Not enough stock to sell products.");
+            alert.showAndWait();
         }
 
         stock -= quantity;

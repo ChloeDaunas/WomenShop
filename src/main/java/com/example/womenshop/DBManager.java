@@ -30,11 +30,13 @@ public class DBManager {
 
             while (myRs.next()) {
                 Clothes c = new Clothes(
+                        myRs.getInt("id"),
                         myRs.getString("name"),
                         myRs.getDouble("purchase_price"),
                         myRs.getDouble("sell_price"),
                         myRs.getInt("size"),
-                        storeFinance
+                        storeFinance,
+                        myRs.getInt("stock")
                 );
                 AllClothes.add(c);
             }
@@ -60,11 +62,13 @@ public class DBManager {
 
             while (myRs.next()) {
                 Shoes s = new Shoes(
+                        myRs.getInt("id"),
                         myRs.getString("name"),
                         myRs.getDouble("purchase_price"),
                         myRs.getDouble("sell_price"),
                         myRs.getInt("shoe_size"),
-                        storeFinance
+                        storeFinance,
+                        myRs.getInt("stock")
                 );
                 AllShoes.add(s);
             }
@@ -90,10 +94,12 @@ public class DBManager {
 
             while (myRs.next()) {
                 Accessories a = new Accessories(
+                        myRs.getInt("id"),
                         myRs.getString("name"),
                         myRs.getDouble("purchase_price"),
                         myRs.getDouble("sell_price"),
-                        storeFinance
+                        storeFinance,
+                        myRs.getInt("stock")
                 );
                 AllAccessories.add(a);
             }
@@ -136,57 +142,38 @@ public class DBManager {
     //methode to add a product
     public void addProduct(Product p) {
         try (Connection conn = connector()) {
-            //check if product exist already
-            String checkSql ="";
+            String sql ="";
+
+
             if (p instanceof Clothes) {
-                checkSql ="SELECT COUNT(*) FROM clothes WHERE name = ?";
+                sql = "INSERT INTO clothes (name, purchase_price, sell_price, size) VALUES (?, ?, ?, ?)";
+
             }
-            else if (p instanceof Shoes) {
-                checkSql ="SELECT COUNT(*) FROM shoes WHERE name = ?";
+            if (p instanceof Shoes) {
+                sql = "INSERT INTO shoes (name, purchase_price, sell_price, shoe_size) VALUES (?, ?, ?, ?)";
+
             }
-            else{
-                checkSql ="SELECT COUNT(*) FROM accessories WHERE name = ?";
+            if (p instanceof Accessories) {
+                sql = "INSERT INTO accessories (name, purchase_price, sell_price) VALUES (?, ?, ?)";
+
             }
-            PreparedStatement checkStmt = conn.prepareStatement(checkSql);
-            checkStmt.setString(1, p.getName());
-            ResultSet rs = checkStmt.executeQuery();
-            rs.next();
-            if (rs.getInt(1) > 0) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Product already existing");
-                alert.setHeaderText(null);
-                alert.setContentText("This product already exists in our database.");
-                alert.showAndWait();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, p.getName());
+
+            ps.setDouble(2, p.getPurchasePrice());
+            ps.setDouble(3, p.getSellPrice());
+
+            if (p instanceof Clothes) {
+                ps.setInt(4, ((Clothes) p).getSize());
+            } else {
+                ps.setInt(4, ((Shoes) p).getShoeSize());
             }
-            else{
-                String sql ="";
-                if (p instanceof Clothes) {
-                    sql = "INSERT INTO clothes (name, purchase_price, sell_price, size) VALUES (?, ?, ?, ?)";
+            ps.executeUpdate();
 
-                }
-                if (p instanceof Shoes) {
-                    sql = "INSERT INTO clothes (name, purchase_price, sell_price, shoe_size) VALUES (?, ?, ?, ?)";
 
-                }
-                if (p instanceof Accessories) {
-                    sql = "INSERT INTO shoes (name, purchase_price, sell_price) VALUES (?, ?, ?)";
 
-                }
 
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, p.getName());
-
-                ps.setDouble(2, p.getPurchasePrice());
-                ps.setDouble(3, p.getSellPrice());
-
-                if (p instanceof Clothes) {
-                    ps.setInt(4, ((Clothes) p).getSize());
-                } else {
-                    ps.setInt(4, ((Shoes) p).getShoeSize());
-                }
-                ps.executeUpdate();
-            }
 
 
         } catch (Exception e) {
@@ -256,5 +243,37 @@ public class DBManager {
             e.printStackTrace();
         }
     }
+
+    public void UpdateStock(int id, String type, int stock) {
+        String sql = "";
+
+
+        try (Connection conn = connector()) {
+
+            if ("Clothes".equals(type)) {
+                sql = "UPDATE clothes SET stock = ? WHERE id = ?";
+            } else if ("Shoes".equals(type)) {
+                sql = "UPDATE shoes SET stock = ? WHERE id = ?";
+            } else if ("Accessories".equals(type)) {
+                sql = "UPDATE accessories SET stock = ? WHERE id = ?";
+            } else {
+                System.out.println("Unknown type: " + type);
+                return;
+            }
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, stock);
+            stmt.setInt(2, id);
+
+            stmt.executeUpdate();
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

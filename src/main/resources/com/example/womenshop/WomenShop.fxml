@@ -50,11 +50,13 @@
       <ComboBox fx:id="TypeCB" layoutX="424.0" layoutY="111.0" prefWidth="150.0" />
       <Label layoutX="344.0" layoutY="115.0" text="Type" />
       <Label layoutX="346.0" layoutY="224.0" text="Size" />
-      <Button fx:id="SellBtn" layoutX="59.0" layoutY="345.0" mnemonicParsing="false" text="Sell" />
-      <Button fx:id="PurchaseBtn" layoutX="153.0" layoutY="345.0" mnemonicParsing="false" text="Pourchase" />
+      <Button fx:id="SellBtn" layoutX="41.0" layoutY="345.0" mnemonicParsing="false" text="Sell" />
+      <Button fx:id="PurchaseBtn" layoutX="136.0" layoutY="345.0" mnemonicParsing="false" text="Pourchase" />
       <Button fx:id="ApplyBtn" layoutX="473.0" layoutY="14.0" mnemonicParsing="false" text="Apply " />
       <Button fx:id="StopBtn" layoutX="534.0" layoutY="14.0" mnemonicParsing="false" text="Stop" />
       <Label layoutX="410.0" layoutY="18.0" text="Discount" />
       <Button fx:id="ClearBtn" layoutX="532.0" layoutY="297.0" mnemonicParsing="false" text="Clear" />
+      <TextField fx:id="SellTF" layoutX="81.0" layoutY="345.0" prefHeight="17.0" prefWidth="32.0" />
+      <TextField fx:id="PurchaseTF" layoutX="211.0" layoutY="345.0" prefHeight="17.0" prefWidth="32.0" />
    </children>
 </AnchorPane>

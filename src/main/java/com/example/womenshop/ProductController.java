@@ -81,6 +81,12 @@ public class ProductController implements Initializable{
     @FXML
     private Button ClearBtn;
 
+    @FXML
+    private TextField PurchaseTF;
+
+    @FXML
+    private TextField SellTF;
+
     private StoreFinance storeFinance;
 
 
@@ -123,6 +129,10 @@ public class ProductController implements Initializable{
         ModifyBtn.setOnAction(event -> modifyProduct());
 
         DeleteBtn.setOnAction(event -> deleteProduct());
+
+        SellBtn.setOnAction(event -> sellProduct());
+
+        PurchaseBtn.setOnAction(event -> purchaseProduct());
     }
 
     private DBManager dbManager = new DBManager();
@@ -249,29 +259,8 @@ public class ProductController implements Initializable{
     }
 
     public void modifyProduct() {
-        Product selectedProduct;
-
         String type = TypeCB.getValue();
-
-        if (type == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No product selected");
-            alert.setHeaderText(null);
-            alert.setContentText("Select a product to modify");
-            alert.showAndWait();
-        }
-
-        if(type.equals("Clothes")){
-            selectedProduct =ClothesLV.getSelectionModel().getSelectedItem();
-        }
-        else if(type.equals("Shoes")){
-            selectedProduct =ShoesLV.getSelectionModel().getSelectedItem();
-        }
-        else {
-            selectedProduct =AccessoriesLV.getSelectionModel().getSelectedItem();
-        }
-
-
+        Product selectedProduct=Select(type, "Select a product to modify");
 
         String name = NameTF.getText();
         double purchaseprice = Double.parseDouble(PourchasePriseTF.getText());
@@ -289,15 +278,80 @@ public class ProductController implements Initializable{
     }
 
     public void deleteProduct() {
+        String type = TypeCB.getValue();
+        Product selectedProduct=Select(type, "Select a product to delete");
+
+        dbManager.deleteProduct(selectedProduct.getId(), type);
+
+        refreshAllTabs();
+        clearFields();
+    }
+
+    public void sellProduct() {
+        String type = TypeCB.getValue();
+        Product selectedProduct=Select(type, "Select a product to Sell");
+
+        if (SellTF.getText().trim().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("warning");
+            alert.setHeaderText(null);
+            alert.setContentText("Enter a quantity");
+            alert.showAndWait();
+        }
+
+        int quantity=Integer.parseInt(SellTF.getText());
+
+
+
+        selectedProduct.sell(quantity);
+
+        dbManager.UpdateStock(selectedProduct.getId(), type, selectedProduct.getStock());
+
+        refreshAllTabs();
+        clearFields();
+        displayFinance();
+
+    }
+
+    public void purchaseProduct() {
+        String type = TypeCB.getValue();
+        Product selectedProduct=Select(type, "Select a product to Purchase");
+
+        if (PurchaseTF.getText().trim().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("warning");
+            alert.setHeaderText(null);
+            alert.setContentText("Enter a quantity");
+            alert.showAndWait();
+        }
+
+        int quantity=Integer.parseInt(PurchaseTF.getText());
+
+
+
+        selectedProduct.purchase(quantity);
+
+
+
+        dbManager.UpdateStock(selectedProduct.getId(), type, selectedProduct.getStock());
+
+
+
+        refreshAllTabs();
+        clearFields();
+        displayFinance();
+
+    }
+
+    public Product Select(String type, String Message){
         Product selectedProduct;
 
-        String type = TypeCB.getValue();
 
         if (type == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("No product selected");
             alert.setHeaderText(null);
-            alert.setContentText("Select a product to delete");
+            alert.setContentText(Message);
             alert.showAndWait();
         }
 
@@ -311,10 +365,7 @@ public class ProductController implements Initializable{
             selectedProduct =AccessoriesLV.getSelectionModel().getSelectedItem();
         }
 
-        dbManager.deleteProduct(selectedProduct.getId(), type);
-
-        refreshAllTabs();
-        clearFields();
+        return selectedProduct;
     }
 
     private void refreshAllTabs() {
@@ -333,6 +384,8 @@ public class ProductController implements Initializable{
         SellPriceTF.clear();
         PourchasePriseTF.clear();
         TypeCB.getSelectionModel().clearSelection();
+        SellTF.clear();
+        PurchaseTF.clear();
     }
 
 
