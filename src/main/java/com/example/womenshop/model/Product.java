@@ -1,4 +1,4 @@
-package com.example.womenshop;
+package com.example.womenshop.model;
 
 import javafx.scene.control.Alert;
 

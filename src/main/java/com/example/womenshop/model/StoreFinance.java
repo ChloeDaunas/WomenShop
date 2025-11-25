@@ -1,4 +1,4 @@
-package com.example.womenshop;
+package com.example.womenshop.model;
 
 public class StoreFinance {
     private double capital = 10000;

@@ -1,5 +1,7 @@
-package com.example.womenshop;
+package com.example.womenshop.Controller;
 
+import com.example.womenshop.model.*;
+import com.example.womenshop.util.DBManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

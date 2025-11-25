@@ -1,8 +1,8 @@
-package com.example.womenshop;
+package com.example.womenshop.model;
 
-public class Accessories extends Product{
+public class Accessories extends Product {
 
-    public Accessories(int id, String name, double purchase_price, double sell_price,StoreFinance storeFinance){
+    public Accessories(int id, String name, double purchase_price, double sell_price, StoreFinance storeFinance){
         super(id, name, purchase_price, sell_price,storeFinance);
         setDiscountPrice(sell_price*ACCESSORY_DISCOUNT);
     }

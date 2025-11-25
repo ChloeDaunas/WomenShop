@@ -1,4 +1,4 @@
-package com.example.womenshop;
+package com.example.womenshop.model;
 
 public interface Discount {
     public void applyDiscount();

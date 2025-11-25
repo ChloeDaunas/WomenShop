@@ -1,6 +1,6 @@
-package com.example.womenshop;
+package com.example.womenshop.model;
 
-public class Clothes extends Product{
+public class Clothes extends Product {
     private int size;
 
     public Clothes(int id, String name, double purchase_price, double sell_price, int size, StoreFinance storeFinance){

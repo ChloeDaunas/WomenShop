@@ -1,7 +1,6 @@
-package com.example.womenshop;
+package com.example.womenshop.util;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListCell;
+import com.example.womenshop.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
