@@ -6,6 +6,7 @@ module com.example.womenshop {
     requires com.dlsc.formsfx;
     requires javafx.base;
     requires java.sql;
+    //requires com.example.womenshop;
 
     opens com.example.womenshop to javafx.fxml;
     exports com.example.womenshop;

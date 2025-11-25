@@ -1,5 +1,8 @@
 package com.example.womenshop.Controller;
 
+import com.example.womenshop.DAO.AccessoriesDAO;
+import com.example.womenshop.DAO.ClothesDAO;
+import com.example.womenshop.DAO.ShoesDAO;
 import com.example.womenshop.model.*;
 import com.example.womenshop.util.DBManager;
 import javafx.collections.FXCollections;
@@ -9,6 +12,7 @@ import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -91,6 +95,12 @@ public class ProductController implements Initializable{
 
     private StoreFinance storeFinance;
 
+    private DBManager dbManager = new DBManager();
+
+    private AccessoriesDAO Adao;
+    private ShoesDAO Sdao;
+    private ClothesDAO Cdao;
+
 
 
     @Override
@@ -102,6 +112,13 @@ public class ProductController implements Initializable{
         gvalues.add("Accessories");
         ObservableList<String> type = FXCollections.observableArrayList(gvalues);
         TypeCB.setItems(type);
+
+        storeFinance = dbManager.getStoreFinance();
+        displayFinance();
+
+        Adao=new AccessoriesDAO(dbManager, storeFinance);
+        Sdao=new ShoesDAO(dbManager, storeFinance);
+        Cdao=new ClothesDAO(dbManager, storeFinance);
 
         loadClothesInListView();
         loadShoesInListView();
@@ -121,8 +138,7 @@ public class ProductController implements Initializable{
                 (obs, oldValue, newValue) -> fillProductFields(newValue)
         );
 
-        storeFinance = dbManager.getStoreFinance();
-        displayFinance();
+
 
         AddBtn.setOnAction(event -> addProduct());
 
@@ -139,13 +155,16 @@ public class ProductController implements Initializable{
         ApplyBtn.setOnAction(event -> ChangePrices(1));
 
         StopBtn.setOnAction(event -> ChangePrices(2));
+
+        SortBtn.setOnAction(event -> SortProducts());
     }
 
-    private DBManager dbManager = new DBManager();
+
+
 
     //putting clothes in the tab
     public void loadClothesInListView() {
-        List<Clothes> allClothes = dbManager.loadClothes();
+        List<Clothes> allClothes = Cdao.loadClothes();
 
         ClothesLV.getItems().addAll(allClothes);
 
@@ -163,7 +182,7 @@ public class ProductController implements Initializable{
 
     //putting shoes in the tab
     public void loadShoesInListView() {
-        List<Shoes> allShoes = dbManager.loadShoes();
+        List<Shoes> allShoes = Sdao.loadShoes();
 
         ShoesLV.getItems().addAll(allShoes);
 
@@ -181,7 +200,7 @@ public class ProductController implements Initializable{
 
     //putting accessories in the tab
     public void loadAccessoriesInListView() {
-        List<Accessories> allAccessories = dbManager.loadAccessories();
+        List<Accessories> allAccessories = Adao.loadAccessories();
 
         AccessoriesLV.getItems().addAll(allAccessories);
 
@@ -243,21 +262,21 @@ public class ProductController implements Initializable{
         switch (type) {
             case "Clothes":
                 newProduct = new Clothes(name, purchase, sell, size, storeFinance);
+                Cdao.addProduct(newProduct);
                 break;
 
             case "Shoes":
                 newProduct = new Shoes(name, purchase, sell, size, storeFinance);
+                Sdao.addProduct(newProduct);
                 break;
 
             case "Accessories":
                 newProduct = new Accessories(name, purchase, sell, storeFinance);
+                Adao.addProduct(newProduct);
                 break;
         }
 
         if (newProduct == null) return;
-
-        //Save in DB
-        dbManager.addProduct(newProduct);
 
         refreshAllTabs();
 
@@ -277,7 +296,19 @@ public class ProductController implements Initializable{
             size = Integer.parseInt(SizeTF.getText());
         }
 
-        dbManager.modifierProduct(selectedProduct.getId(),name, purchaseprice, sellprice, size, type);
+        switch (type) {
+            case "Clothes":
+                Cdao.modifierProduct(selectedProduct.getId(),name, purchaseprice, sellprice, size);
+                break;
+
+            case "Shoes":
+                Sdao.modifierProduct(selectedProduct.getId(),name, purchaseprice, sellprice, size);
+                break;
+
+            case "Accessories":
+                Adao.modifierProduct(selectedProduct.getId(),name, purchaseprice, sellprice, size);
+                break;
+        }
 
         refreshAllTabs();
         clearFields();
@@ -287,7 +318,20 @@ public class ProductController implements Initializable{
         String type = TypeCB.getValue();
         Product selectedProduct=Select(type, "Select a product to delete");
 
-        dbManager.deleteProduct(selectedProduct.getId(), type);
+        switch (type) {
+            case "Clothes":
+                Cdao.deleteProduct(selectedProduct.getId());
+                break;
+
+            case "Shoes":
+                Sdao.deleteProduct(selectedProduct.getId());
+                break;
+
+            case "Accessories":
+                Adao.deleteProduct(selectedProduct.getId());
+                break;
+        }
+
 
         refreshAllTabs();
         clearFields();
@@ -311,7 +355,20 @@ public class ProductController implements Initializable{
 
         selectedProduct.sell(quantity);
 
-        dbManager.UpdateStock(selectedProduct.getId(), type, selectedProduct.getStock());
+        switch (type) {
+            case "Clothes":
+
+                Cdao.UpdateStock(selectedProduct.getId(), selectedProduct.getStock());
+                break;
+
+            case "Shoes":
+                Sdao.UpdateStock(selectedProduct.getId(), selectedProduct.getStock());
+                break;
+
+            case "Accessories":
+                Adao.UpdateStock(selectedProduct.getId(), selectedProduct.getStock());
+                break;
+        }
 
         refreshAllTabs();
         clearFields();
@@ -339,7 +396,19 @@ public class ProductController implements Initializable{
 
 
 
-        dbManager.UpdateStock(selectedProduct.getId(), type, selectedProduct.getStock());
+        switch (type) {
+            case "Clothes":
+                Cdao.UpdateStock(selectedProduct.getId(), selectedProduct.getStock());
+                break;
+
+            case "Shoes":
+                Sdao.UpdateStock(selectedProduct.getId(), selectedProduct.getStock());
+                break;
+
+            case "Accessories":
+                Adao.UpdateStock(selectedProduct.getId(), selectedProduct.getStock());
+                break;
+        }
 
 
 
@@ -354,7 +423,7 @@ public class ProductController implements Initializable{
         ShoesLV.getItems().clear();
         AccessoriesLV.getItems().clear();
 
-        List<Accessories> allaccessories=dbManager.loadAccessories();
+        List<Accessories> allaccessories=Adao.loadAccessories();
         for(Accessories accessories:allaccessories){
             if(choix==1){
                 accessories.applyDiscount();
@@ -378,7 +447,7 @@ public class ProductController implements Initializable{
             }
         });
 
-        List<Shoes> allShoes=dbManager.loadShoes();
+        List<Shoes> allShoes=Sdao.loadShoes();
         for(Shoes shoes:allShoes){
             if(choix==1){
                 shoes.applyDiscount();
@@ -401,7 +470,7 @@ public class ProductController implements Initializable{
             }
         });
 
-        List<Clothes> allClothes=dbManager.loadClothes();
+        List<Clothes> allClothes=Cdao.loadClothes();
 
         for(Clothes clothes:allClothes){
             if(choix==1){
@@ -425,6 +494,59 @@ public class ProductController implements Initializable{
             }
         });
         clearFields();
+    }
+
+    public void SortProducts() {
+        ClothesLV.getItems().clear();
+        ShoesLV.getItems().clear();
+        AccessoriesLV.getItems().clear();
+
+        List<Clothes> allClothes = Cdao.loadClothes();
+        Collections.sort(allClothes);
+        ClothesLV.getItems().addAll(allClothes);
+
+        ClothesLV.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Clothes item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null)
+                    setText(null);
+                else
+                    setText(item.getName() + " — stock: " + item.getStock());
+            }
+        });
+
+        List<Shoes> allShoes = Sdao.loadShoes();
+        Collections.sort(allShoes);
+        ShoesLV.getItems().addAll(allShoes);
+
+        ShoesLV.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Shoes item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null)
+                    setText(null);
+                else
+                    setText(item.getName() + " — stock: " + item.getStock());
+            }
+        });
+
+        List<Accessories> allAccessories = Adao.loadAccessories();
+        Collections.sort(allAccessories);
+        AccessoriesLV.getItems().addAll(allAccessories);
+
+        AccessoriesLV.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Accessories item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null)
+                    setText(null);
+                else
+                    setText(item.getName() + " — stock: " + item.getStock());
+            }
+        });
+
+
     }
 
 
