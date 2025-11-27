@@ -72,6 +72,8 @@ public class AccessoriesDAO {
             stmt.setDouble(3, newSellPrice);
             stmt.setInt(4, id);
 
+            stmt.executeUpdate();
+
 
         } catch (SQLException e) {
             e.printStackTrace();

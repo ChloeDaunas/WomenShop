@@ -253,7 +253,7 @@ public class ProductController implements Initializable{
         if (type == null) return;
 
         String name = NameTF.getText();
-        int size = Integer.parseInt(SizeTF.getText());
+        int size;
         double purchase = Double.parseDouble(PourchasePriseTF.getText());
         double sell = Double.parseDouble(SellPriceTF.getText());
 
@@ -261,11 +261,13 @@ public class ProductController implements Initializable{
 
         switch (type) {
             case "Clothes":
+                 size = Integer.parseInt(SizeTF.getText());
                 newProduct = new Clothes(name, purchase, sell, size, storeFinance);
                 Cdao.addProduct(newProduct);
                 break;
 
             case "Shoes":
+                size = Integer.parseInt(SizeTF.getText());
                 newProduct = new Shoes(name, purchase, sell, size, storeFinance);
                 Sdao.addProduct(newProduct);
                 break;
@@ -379,7 +381,7 @@ public class ProductController implements Initializable{
     public void purchaseProduct() {
         String type = TypeCB.getValue();
         Product selectedProduct=Select(type, "Select a product to Purchase");
-
+        int quantity;
         if (PurchaseTF.getText().trim().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("warning");
@@ -387,12 +389,16 @@ public class ProductController implements Initializable{
             alert.setContentText("Enter a quantity");
             alert.showAndWait();
         }
+        else{
+            quantity=Integer.parseInt(PurchaseTF.getText());
+            selectedProduct.purchase(quantity);
+        }
 
-        int quantity=Integer.parseInt(PurchaseTF.getText());
 
 
 
-        selectedProduct.purchase(quantity);
+
+
 
 
 
