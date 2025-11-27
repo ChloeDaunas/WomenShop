@@ -84,16 +84,19 @@ public abstract class Product implements Discount, Comparable<Product> {
             alert.setContentText("Not enough capital to buy products.");
             alert.showAndWait();
         }
-        if(quantity <0) {
+        else if(quantity <0) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setHeaderText(null);
             alert.setContentText("Can not buy a negative quantity.");
             alert.showAndWait();
         }
+        else{
+            stock += quantity;
+            storeFinance.registerPurchase(total);
+        }
 
-        stock += quantity;
-        storeFinance.registerPurchase(total);
+
     }
 
 
